@@ -1,0 +1,37 @@
+services:
+  nginx-proxy:
+    image: nginx:1.29.0-alpine
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+      - "53:53"
+    volumes:
+      - "./nginx/:/etc/nginx/"
+    restart: always
+
+  nginx:
+    image: nginx:1.29.0-alpine
+    container_name: nginx
+    expose:
+      - "80"
+    volumes:
+      - "./nginx/conf.d/:/etc/nginx/conf.d/"
+    restart: always
+
+  bind1:
+    image: internetsystemsconsortium/bind9:9.21
+    container_name: bind1
+    expose:
+      - "53"
+    volumes:
+      - "./bind1/:/etc/bind/"
+    restart: always
+
+  bind2:
+    image: internetsystemsconsortium/bind9:9.21
+    container_name: bind2
+    expose:
+      - "53"
+    volumes:
+      - "./bind2/:/etc/bind/"
+    restart: always
