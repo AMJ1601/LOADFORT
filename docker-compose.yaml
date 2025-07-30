@@ -15,7 +15,18 @@ services:
     expose:
       - "80"
     volumes:
-      - "./nginx/conf.d/:/etc/nginx/conf.d/"
+      - "./nginx-npconf/conf.d/:/etc/nginx/conf.d/"
+      - "./html-nginx1/:/usr/share/nginx/html/"
+    restart: always
+
+  nginx2:
+    image: nginx:1.29.0-alpine
+    container_name: nginx2
+    expose:
+      - "80"
+    volumes:
+      - "./nginx-npconf/conf.d/:/etc/nginx/conf.d/"
+      - "./html-nginx2/:/usr/share/nginx/html/"
     restart: always
 
   bind1:
