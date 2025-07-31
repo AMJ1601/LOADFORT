@@ -4,10 +4,13 @@ services:
     container_name: nginx-proxy
     ports:
       - "80:80"
-      - "53:53"
+      - "53:53/udp"
     volumes:
       - "./nginx/:/etc/nginx/"
     restart: always
+    networks:
+      dnsnet:
+        ipv4_address: 172.28.1.6
 
   nginx:
     image: nginx:1.29.0-alpine
@@ -18,6 +21,9 @@ services:
       - "./nginx-npconf/conf.d/:/etc/nginx/conf.d/"
       - "./html-nginx1/:/usr/share/nginx/html/"
     restart: always
+    networks:
+      dnsnet:
+        ipv4_address: 172.28.1.2
 
   nginx2:
     image: nginx:1.29.0-alpine
@@ -28,21 +34,37 @@ services:
       - "./nginx-npconf/conf.d/:/etc/nginx/conf.d/"
       - "./html-nginx2/:/usr/share/nginx/html/"
     restart: always
+    networks:
+      dnsnet:
+        ipv4_address: 172.28.1.3
 
   bind1:
     image: internetsystemsconsortium/bind9:9.21
     container_name: bind1
     expose:
-      - "53"
+      - "53/udp"
     volumes:
       - "./bind1/:/etc/bind/"
     restart: always
+    networks:
+      dnsnet:
+        ipv4_address: 172.28.1.4
 
   bind2:
     image: internetsystemsconsortium/bind9:9.21
     container_name: bind2
     expose:
-      - "53"
+      - "53/udp"
     volumes:
       - "./bind2/:/etc/bind/"
     restart: always
+    networks:
+      dnsnet:
+        ipv4_address: 172.28.1.5
+
+networks:
+  dnsnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.1.0/24
